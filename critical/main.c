@@ -24,7 +24,8 @@ int lamport_clock = 0;
 
 pthread_t threadKom;
 pthread_mutex_t clock_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t ack_acquired = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t check_cond_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t check_cond = PTHREAD_COND_INITIALIZER;
 
 int timestamps[16] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX, 
                     INT_MAX, INT_MAX, INT_MAX, INT_MAX, 
@@ -37,7 +38,7 @@ int req_ts[16] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX,
 
 void finalizuj()
 {
-    pthread_cond_destroy(&ack_acquired);
+    pthread_cond_destroy(&check_cond);
     pthread_mutex_destroy( &stateMut);
     /* Czekamy, aż wątek potomny się zakończy */
     println("czekam na wątek \"komunikacyjny\"\n" );

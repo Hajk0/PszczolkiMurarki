@@ -30,13 +30,14 @@ UTILH	util.h	2;"	d
 WATEK_GLOWNY_H	watek_glowny.h	2;"	d
 WATEK_KOMUNIKACYJNY_H	watek_komunikacyjny.h	2;"	d
 ackCount	main.c	/^int ackCount = 0;$/;"	v
-ack_acquired	main.c	/^pthread_cond_t ack_acquired = PTHREAD_COND_INITIALIZER;$/;"	v
 changeState	util.c	/^void changeState( state_t newState )$/;"	f
+check_cond	main.c	/^pthread_cond_t check_cond = PTHREAD_COND_INITIALIZER;$/;"	v
+check_cond_mutex	main.c	/^pthread_mutex_t check_cond_mutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v
 check_thread_support	main.c	/^void check_thread_support(int provided)$/;"	f
 clock_mutex	main.c	/^pthread_mutex_t clock_mutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v
 data	util.h	/^    int data;     \/* przykładowe pole z danymi; można zmienić nazwę na bardziej pasującą *\/$/;"	m	struct:__anon1
-debug	main.h	54;"	d
-debug	main.h	56;"	d
+debug	main.h	55;"	d
+debug	main.h	57;"	d
 finalizuj	main.c	/^void finalizuj()$/;"	f
 inicjuj_typ_pakietu	util.c	/^void inicjuj_typ_pakietu()$/;"	f
 lamport_clock	main.c	/^int lamport_clock = 0;$/;"	v
@@ -45,7 +46,7 @@ mainLoop	watek_glowny.c	/^void mainLoop()$/;"	f
 name	util.c	/^    const char *name;$/;"	m	struct:tagNames_t	file:
 onTopQueue	util.c	/^int onTopQueue(int rank) {$/;"	f
 packet_t	util.h	/^} packet_t;$/;"	t	typeref:struct:__anon1
-println	main.h	60;"	d
+println	main.h	61;"	d
 rank	main.c	/^int rank, size;$/;"	v
 req_ts	main.c	/^int req_ts[16] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX, $/;"	v
 sendPacket	util.c	/^void sendPacket(packet_t *pkt, int destination, int tag)$/;"	f

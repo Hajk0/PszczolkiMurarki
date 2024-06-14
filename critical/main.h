@@ -27,7 +27,8 @@ extern pthread_t threadKom;
 
 extern int lamport_clock;
 extern pthread_mutex_t clock_mutex;
-extern pthread_cond_t ack_acquired;
+extern pthread_mutex_t check_cond_mutex;
+extern pthread_cond_t check_cond;
 
 extern int timestamps[16];
 extern int req_ts[16];

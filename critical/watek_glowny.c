@@ -19,15 +19,18 @@ void mainLoop()
 		    packet_t *pkt = malloc(sizeof(packet_t));
 		    pkt->data = perc;
 		    ackCount = 0;
+
+			pthread_mutex_lock(&clock_mutex);
+			req_ts[rank] = lamport_clock;
+			timestamps[rank] = lamport_clock;
+			int ts_to_send = lamport_clock;
+			lamport_clock++;
+			pthread_mutex_unlock(&clock_mutex);
+
 		    for (int i=0;i<=size-1;i++) {
 				if (i!=rank) {
 					sendPacket( pkt, i, REQUEST);
 				} else { // send to myself
-					pthread_mutex_lock(&clock_mutex);
-					req_ts[rank] = lamport_clock;
-					timestamps[rank] = lamport_clock;
-					lamport_clock++;
-					pthread_mutex_unlock(&clock_mutex);
 				}
 			}
 			
@@ -45,10 +48,14 @@ void mainLoop()
 		println("Czekam na wejście do sekcji krytycznej")
 		// tutaj zapewne jakiś semafor albo zmienna warunkowa
 		// bo aktywne czekanie jest BUE
-		
+		pthread_mutex_lock(&check_cond_mutex);
 		if ( ackCount == size - 1 && onTopQueue(rank)) {
+			pthread_mutex_unlock(&check_cond_mutex);
 			changeState(InSection);
 			break;
+		} else {
+			pthread_cond_wait(&check_cond, &check_cond_mutex);
+			pthread_mutex_unlock(&check_cond_mutex);
 		}
 		break;
 	    case InSection:
@@ -69,7 +76,7 @@ void mainLoop()
 					pthread_mutex_lock(&clock_mutex);
 					req_ts[rank] = INT_MAX;
 					timestamps[rank] = lamport_clock;
-					lamport_clock++;
+					//lamport_clock++;
 					pthread_mutex_unlock(&clock_mutex);
 				}
 			}

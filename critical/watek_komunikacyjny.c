@@ -23,17 +23,34 @@ void *startKomWatek(void *ptr)
 
         switch ( status.MPI_TAG ) {
 	    case REQUEST: 
+            timestamps[pakiet.src] = pakiet.src;
             req_ts[pakiet.src] = pakiet.ts;
+            
+            pthread_mutex_lock(&check_cond_mutex);
+            if (onTopQueue(rank)) {
+                pthread_cond_signal(&check_cond);
+            }
+            pthread_mutex_unlock(&check_cond_mutex);
                 debug("Ktoś coś prosi. A niech ma!")
 		    sendPacket( 0, status.MPI_SOURCE, ACK );
 	        break;
 	    case ACK: 
+            pthread_mutex_lock(&check_cond_mutex);
 	        ackCount++; /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
+            if (ackCount == size - 1) {
+                pthread_cond_signal(&check_cond);
+            }
+            pthread_mutex_unlock(&check_cond_mutex);
                 debug("Dostałem ACK od %d, mam już %d", status.MPI_SOURCE, ackCount);
 	        break;
         case RELEASE:
                 debug("Otrzymałem wiadomość, że proces %d zwalnia sekcję krytyczną", status.MPI_SOURCE);
             req_ts[pakiet.src] = INT_MAX;
+            pthread_mutex_lock(&check_cond_mutex);
+            if (onTopQueue(rank)) {
+                pthread_cond_signal(&check_cond);
+            }
+            pthread_mutex_unlock(&check_cond_mutex);
             break;
 	    default:
 	        break;
