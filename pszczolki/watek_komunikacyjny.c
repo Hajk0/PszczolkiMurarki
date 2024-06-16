@@ -27,7 +27,7 @@ void *startKomWatek(void *ptr)
             req_ts[pakiet.src] = pakiet.ts;
             
             pthread_mutex_lock(&check_cond_mutex);
-            if (onTopQueue(rank)) {
+            if (onNTopQueue(rank, CRIT_SEC_SIZE)) { //
                 pthread_cond_signal(&check_cond);
             }
             pthread_mutex_unlock(&check_cond_mutex);
@@ -37,7 +37,7 @@ void *startKomWatek(void *ptr)
 	    case ACK: 
             pthread_mutex_lock(&check_cond_mutex);
 	        ackCount++; /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
-            if (ackCount == size - 1) {
+            if (ackCount >= size - CRIT_SEC_SIZE) { //
                 pthread_cond_signal(&check_cond);
             }
             pthread_mutex_unlock(&check_cond_mutex);
@@ -47,7 +47,7 @@ void *startKomWatek(void *ptr)
                 debug("Otrzymałem wiadomość, że proces %d zwalnia sekcję krytyczną", status.MPI_SOURCE);
             req_ts[pakiet.src] = INT_MAX;
             pthread_mutex_lock(&check_cond_mutex);
-            if (onTopQueue(rank)) {
+            if (onNTopQueue(rank, CRIT_SEC_SIZE)) { //
                 pthread_cond_signal(&check_cond);
             }
             pthread_mutex_unlock(&check_cond_mutex);

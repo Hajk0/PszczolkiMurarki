@@ -18,19 +18,6 @@ void mainLoop()
 		    debug("Zmieniam stan na wysyłanie");
 		    packet_t *pkt = malloc(sizeof(packet_t));
 		    pkt->data = perc;
-		    /*ackCount = 0;
-
-			pthread_mutex_lock(&clock_mutex);
-			req_ts[rank] = lamport_clock;
-			lamport_clock++;
-			pthread_mutex_unlock(&clock_mutex);
-
-		    for (int i=0;i<=size-1;i++) {
-				if (i!=rank) {
-					sendPacket( pkt, i, REQUEST);
-				} else { // send to myself
-				}
-			}*/
 			sendRequests(pkt);
 			
 		    changeState( InWant ); // w VI naciśnij ctrl-] na nazwie funkcji, ctrl+^ żeby wrócić
@@ -48,7 +35,7 @@ void mainLoop()
 		// tutaj zapewne jakiś semafor albo zmienna warunkowa
 		// bo aktywne czekanie jest BUE
 		pthread_mutex_lock(&check_cond_mutex);
-		if ( ackCount == size - 1 && onTopQueue(rank)) {
+		if ( ackCount >= size - CRIT_SEC_SIZE && onNTopQueue(rank, CRIT_SEC_SIZE)) { //
 			pthread_mutex_unlock(&check_cond_mutex);
 			changeState(InSection);
 			break;
@@ -67,18 +54,8 @@ void mainLoop()
 		    println("Wychodzę z sekcji krytycznej")
 		    debug("Zmieniam stan na wysyłanie");
 		    packet_t *pkt = malloc(sizeof(packet_t));
-		    pkt->data = perc;
-		    for (int i=0;i<=size-1;i++) {
-				if (i!=rank) {
-					sendPacket( pkt, (rank+1)%size, RELEASE);
-				} else { // send to myself
-					pthread_mutex_lock(&clock_mutex);
-					req_ts[rank] = INT_MAX;
-					timestamps[rank] = lamport_clock;
-					//lamport_clock++;
-					pthread_mutex_unlock(&clock_mutex);
-				}
-			}
+			pkt->data = perc;
+			sendReleases(pkt);
 		    changeState( InRun );
 		    free(pkt);
 		//}

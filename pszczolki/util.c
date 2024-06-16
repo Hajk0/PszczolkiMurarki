@@ -88,6 +88,19 @@ int onTopQueue(int rank) {
     return TRUE;
 }
 
+int onNTopQueue(int rank, int topN) {
+    int count = 0;
+    for (int i = 0; i < PROC_AMOUNT; i++) {
+        if (i != rank && req_ts[i] < req_ts[rank]) {
+            count++;
+            if (count == topN) {
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
 void sendRequests(packet_t *pkt) {
     ackCount = 0;
 
@@ -100,6 +113,20 @@ void sendRequests(packet_t *pkt) {
         if (i!=rank) {
             sendPacket( pkt, i, REQUEST);
         } else { // send to myself
+        }
+    }
+}
+
+void sendReleases(packet_t *pkt) {
+    for (int i=0;i<=size-1;i++) {
+        if (i!=rank) {
+            sendPacket( pkt, (rank+1)%size, RELEASE);
+        } else { // send to myself
+            pthread_mutex_lock(&clock_mutex);
+            req_ts[rank] = INT_MAX;
+            timestamps[rank] = lamport_clock;
+            //lamport_clock++;
+            pthread_mutex_unlock(&clock_mutex);
         }
     }
 }

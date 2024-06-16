@@ -15,6 +15,7 @@
 int rank, size;
 int ackCount = 0;
 int lamport_clock = 0;
+
 /* 
  * Każdy proces ma dwa wątki - główny i komunikacyjny
  * w plikach, odpowiednio, watek_glowny.c oraz (siurpryza) watek_komunikacyjny.c

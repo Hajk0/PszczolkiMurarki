@@ -15,6 +15,7 @@
 #define SEC_IN_STATE 1
 #define STATE_CHANGE_PROB 10
 #define PROC_AMOUNT 16
+#define CRIT_SEC_SIZE 2
 // #define DEBUG 1
 
 #define ROOT 0
