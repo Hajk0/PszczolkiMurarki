@@ -58,11 +58,9 @@ void sendPacket(packet_t *pkt, int destination, int tag)
     if (pkt==0) { pkt = malloc(sizeof(packet_t)); freepkt=1;}
     pkt->src = rank;
 
-
     pthread_mutex_lock(&clock_mutex);
     pkt->ts = lamport_clock;
     lamport_clock++;
-    
     pthread_mutex_unlock(&clock_mutex);
 
     MPI_Send( pkt, 1, MPI_PAKIET_T, destination, tag, MPI_COMM_WORLD);
@@ -88,4 +86,20 @@ int onTopQueue(int rank) {
         }
     }
     return TRUE;
+}
+
+void sendRequests(packet_t *pkt) {
+    ackCount = 0;
+
+    pthread_mutex_lock(&clock_mutex);
+    req_ts[rank] = lamport_clock;
+    lamport_clock++;
+    pthread_mutex_unlock(&clock_mutex);
+
+    for (int i=0;i<=size-1;i++) {
+        if (i!=rank) {
+            sendPacket( pkt, i, REQUEST);
+        } else { // send to myself
+        }
+    }
 }

@@ -50,6 +50,7 @@ println	main.h	61;"	d
 rank	main.c	/^int rank, size;$/;"	v
 req_ts	main.c	/^int req_ts[16] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX, $/;"	v
 sendPacket	util.c	/^void sendPacket(packet_t *pkt, int destination, int tag)$/;"	f
+sendRequests	util.c	/^void sendRequests(packet_t *pkt) {$/;"	f
 size	main.c	/^int rank, size;$/;"	v
 src	util.h	/^    int src;  $/;"	m	struct:__anon1
 stan	util.c	/^state_t stan=InRun;$/;"	v

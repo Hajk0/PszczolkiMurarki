@@ -18,12 +18,10 @@ void mainLoop()
 		    debug("Zmieniam stan na wysyłanie");
 		    packet_t *pkt = malloc(sizeof(packet_t));
 		    pkt->data = perc;
-		    ackCount = 0;
+		    /*ackCount = 0;
 
 			pthread_mutex_lock(&clock_mutex);
 			req_ts[rank] = lamport_clock;
-			timestamps[rank] = lamport_clock;
-			int ts_to_send = lamport_clock;
 			lamport_clock++;
 			pthread_mutex_unlock(&clock_mutex);
 
@@ -32,7 +30,8 @@ void mainLoop()
 					sendPacket( pkt, i, REQUEST);
 				} else { // send to myself
 				}
-			}
+			}*/
+			sendRequests(pkt);
 			
 		    changeState( InWant ); // w VI naciśnij ctrl-] na nazwie funkcji, ctrl+^ żeby wrócić
 					   // :w żeby zapisać, jeżeli narzeka że w pliku są zmiany

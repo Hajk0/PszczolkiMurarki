@@ -32,4 +32,5 @@ extern pthread_mutex_t stateMut;
 /* zmiana stanu, obwarowana muteksem */
 void changeState( state_t );
 int onTopQueue(int rank);
+void sendRequests(packet_t *pkt);
 #endif
