@@ -12,22 +12,19 @@ void *startKomWatek(void *ptr)
     while ( stan!=InFinish ) {
 	debug("czekam na recv");
         MPI_Recv( &pakiet, 1, MPI_PAKIET_T, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-        
+
         pthread_mutex_lock(&clock_mutex);
         if (pakiet.ts > lamport_clock) {
             lamport_clock = pakiet.ts;
         }
         lamport_clock++;
-        timestamps[pakiet.src] = pakiet.ts;
         pthread_mutex_unlock(&clock_mutex);
 
         switch ( status.MPI_TAG ) {
 	    case REQUEST: 
-            timestamps[pakiet.src] = pakiet.src;
-            req_ts[pakiet.src] = pakiet.ts;
-            
             pthread_mutex_lock(&check_cond_mutex);
-            if (onNTopQueue(rank, CRIT_SEC_SIZE)) { //
+            n_req_ts[pakiet.data][pakiet.src] = pakiet.ts;
+            if (onNTopQueue(rank, CRIT_SEC_SIZE, pakiet.data)) { //
                 pthread_cond_signal(&check_cond);
             }
             pthread_mutex_unlock(&check_cond_mutex);
@@ -45,9 +42,9 @@ void *startKomWatek(void *ptr)
 	        break;
         case RELEASE:
                 debug("Otrzymałem wiadomość, że proces %d zwalnia sekcję krytyczną", status.MPI_SOURCE);
-            req_ts[pakiet.src] = INT_MAX;
+            n_req_ts[pakiet.data][pakiet.src] = INT_MAX;
             pthread_mutex_lock(&check_cond_mutex);
-            if (onNTopQueue(rank, CRIT_SEC_SIZE)) { //
+            if (onNTopQueue(rank, CRIT_SEC_SIZE, pakiet.data)) { //
                 pthread_cond_signal(&check_cond);
             }
             pthread_mutex_unlock(&check_cond_mutex);

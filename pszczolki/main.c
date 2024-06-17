@@ -28,14 +28,16 @@ pthread_mutex_t clock_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t check_cond_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t check_cond = PTHREAD_COND_INITIALIZER;
 
-int timestamps[16] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX, 
-                    INT_MAX, INT_MAX, INT_MAX, INT_MAX, 
-                    INT_MAX, INT_MAX, INT_MAX, INT_MAX,
-                    INT_MAX, INT_MAX, INT_MAX, INT_MAX};
-int req_ts[16] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX, 
-                    INT_MAX, INT_MAX, INT_MAX, INT_MAX, 
-                    INT_MAX, INT_MAX, INT_MAX, INT_MAX,
-                    INT_MAX, INT_MAX, INT_MAX, INT_MAX};
+int timestamps[PROC_AMOUNT] =   {INT_MAX, INT_MAX, INT_MAX, INT_MAX, 
+                                INT_MAX, INT_MAX, INT_MAX, INT_MAX};
+                                // INT_MAX, INT_MAX, INT_MAX, INT_MAX,
+                                // INT_MAX, INT_MAX, INT_MAX, INT_MAX};
+int req_ts[PROC_AMOUNT] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX, 
+                            INT_MAX, INT_MAX, INT_MAX, INT_MAX};
+                            // INT_MAX, INT_MAX, INT_MAX, INT_MAX,
+                            // INT_MAX, INT_MAX, INT_MAX, INT_MAX};
+
+int n_req_ts[REET_AMOUNT][PROC_AMOUNT];
 
 void finalizuj()
 {
@@ -75,6 +77,12 @@ void check_thread_support(int provided)
 
 int main(int argc, char **argv)
 {
+    for (int i = 0; i < REET_AMOUNT; i++) {
+        for (int j = 0; j < PROC_AMOUNT; j++) {
+            n_req_ts[i][j] = INT_MAX;
+        }
+    }
+    
     MPI_Status status;
     int provided;
     MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);

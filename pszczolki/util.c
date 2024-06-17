@@ -29,15 +29,9 @@ const char *const tag2string( int tag )
     }
     return "<unknown>";
 }
-/* tworzy typ MPI_PAKIET_T
-*/
+
 void inicjuj_typ_pakietu()
 {
-    /* Stworzenie typu */
-    /* Poniższe (aż do MPI_Type_commit) potrzebne tylko, jeżeli
-       brzydzimy się czymś w rodzaju MPI_Send(&typ, sizeof(pakiet_t), MPI_BYTE....
-    */
-    /* sklejone z stackoverflow */
     int       blocklengths[NITEMS] = {1,1,1};
     MPI_Datatype typy[NITEMS] = {MPI_INT, MPI_INT, MPI_INT};
 
@@ -51,7 +45,6 @@ void inicjuj_typ_pakietu()
     MPI_Type_commit(&MPI_PAKIET_T);
 }
 
-/* opis patrz util.h */
 void sendPacket(packet_t *pkt, int destination, int tag)
 {
     int freepkt=0;
@@ -59,8 +52,8 @@ void sendPacket(packet_t *pkt, int destination, int tag)
     pkt->src = rank;
 
     pthread_mutex_lock(&clock_mutex);
-    pkt->ts = lamport_clock;
     lamport_clock++;
+    pkt->ts = lamport_clock;
     pthread_mutex_unlock(&clock_mutex);
 
     MPI_Send( pkt, 1, MPI_PAKIET_T, destination, tag, MPI_COMM_WORLD);
@@ -79,19 +72,19 @@ void changeState( state_t newState )
     pthread_mutex_unlock( &stateMut );
 }
 
-int onTopQueue(int rank) {
+int onTopQueue(int rank, int perc) {
     for (int i = 0; i < PROC_AMOUNT; i++) {
-        if (i != rank && req_ts[i] < req_ts[rank]) {
+        if (i != rank && n_req_ts[perc][i] < n_req_ts[perc][rank]) {
             return FALSE;
         }
     }
     return TRUE;
 }
 
-int onNTopQueue(int rank, int topN) {
+int onNTopQueue(int rank, int topN, int perc) {
     int count = 0;
     for (int i = 0; i < PROC_AMOUNT; i++) {
-        if (i != rank && req_ts[i] < req_ts[rank]) {
+        if (i != rank && n_req_ts[perc][i] <= n_req_ts[perc][rank]) {
             count++;
             if (count == topN) {
                 return FALSE;
@@ -104,15 +97,14 @@ int onNTopQueue(int rank, int topN) {
 void sendRequests(packet_t *pkt) {
     ackCount = 0;
 
-    pthread_mutex_lock(&clock_mutex);
-    req_ts[rank] = lamport_clock;
-    lamport_clock++;
-    pthread_mutex_unlock(&clock_mutex);
-
     for (int i=0;i<=size-1;i++) {
         if (i!=rank) {
             sendPacket( pkt, i, REQUEST);
         } else { // send to myself
+            pthread_mutex_lock(&clock_mutex);
+            lamport_clock++;
+            n_req_ts[pkt->data][rank] = lamport_clock;
+            pthread_mutex_unlock(&clock_mutex);
         }
     }
 }
@@ -120,12 +112,11 @@ void sendRequests(packet_t *pkt) {
 void sendReleases(packet_t *pkt) {
     for (int i=0;i<=size-1;i++) {
         if (i!=rank) {
-            sendPacket( pkt, (rank+1)%size, RELEASE);
+            sendPacket( pkt, i, RELEASE);
         } else { // send to myself
             pthread_mutex_lock(&clock_mutex);
-            req_ts[rank] = INT_MAX;
-            timestamps[rank] = lamport_clock;
-            //lamport_clock++;
+            lamport_clock++;
+            n_req_ts[pkt->data][rank] = INT_MAX;
             pthread_mutex_unlock(&clock_mutex);
         }
     }
