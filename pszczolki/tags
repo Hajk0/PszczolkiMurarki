@@ -28,7 +28,7 @@ MAINH	main.h	2;"	d
 MPI_PAKIET_T	util.c	/^MPI_Datatype MPI_PAKIET_T;$/;"	v
 NITEMS	util.h	13;"	d
 PROC_AMOUNT	main.h	17;"	d
-REET_AMOUNT	main.h	19;"	d
+REED_AMOUNT	main.h	19;"	d
 RELEASE	util.h	19;"	d
 REQUEST	util.h	18;"	d
 ROOT	main.h	22;"	d
@@ -57,7 +57,7 @@ inicjuj_typ_pakietu	util.c	/^void inicjuj_typ_pakietu()$/;"	f
 lamport_clock	main.c	/^int lamport_clock = 0;$/;"	v
 main	main.c	/^int main(int argc, char **argv)$/;"	f
 mainLoop	watek_glowny.c	/^void mainLoop()$/;"	f
-n_req_ts	main.c	/^int n_req_ts[REET_AMOUNT][PROC_AMOUNT];$/;"	v
+n_req_ts	main.c	/^int n_req_ts[REED_AMOUNT][PROC_AMOUNT];$/;"	v
 name	util.c	/^    const char *name;$/;"	m	struct:tagNames_t	file:
 onFlowerTopQueue	util.c	/^int onFlowerTopQueue(int rank, int topN, int perc) {$/;"	f
 onNTopQueue	util.c	/^int onNTopQueue(int rank, int topN, int perc) {$/;"	f
@@ -65,7 +65,7 @@ onTopQueue	util.c	/^int onTopQueue(int rank, int perc) {$/;"	f
 packet_t	util.h	/^} packet_t;$/;"	t	typeref:struct:__anon1
 println	main.h	69;"	d
 rank	main.c	/^int rank, size;$/;"	v
-reed_capacity	main.c	/^int reed_capacity[REET_AMOUNT];$/;"	v
+reed_capacity	main.c	/^int reed_capacity[REED_AMOUNT];$/;"	v
 req_ts	main.c	/^int req_ts[PROC_AMOUNT] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX, $/;"	v
 sendPacket	util.c	/^void sendPacket(packet_t *pkt, int destination, int tag)$/;"	f
 sendReleases	util.c	/^void sendReleases(packet_t *pkt) {$/;"	f

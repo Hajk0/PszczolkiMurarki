@@ -13,7 +13,8 @@ void mainLoop()
 		switch (stan) {
 			case InRun: 
 			perc = random()%10;
-			if ( perc < REET_AMOUNT ) {
+			
+			if ( perc < REED_AMOUNT && reed_capacity[perc] > 0) {
 				debug("Perc: %d", perc);
 				println("Ubiegam się o sekcję krytyczną")
 				debug("Zmieniam stan na wysyłanie");
@@ -28,10 +29,20 @@ void mainLoop()
 			debug("Skończyłem myśleć");
 			break;
 			case InWantReet:
+			
+			for (int i = 0; i < REED_AMOUNT; i++) {
+				printf("%d ", reed_capacity[i]);
+			}
+			printf("\n");
+			if (reed_capacity[perc] == 0) {
+				changeState( InRun );
+				break;
+			}
+
 			println("Czekam na wejście do sekcji krytycznej")
 			pthread_mutex_lock(&check_cond_mutex);
-			if ( ackCount >= size - 1 && onNTopQueue(rank, 1, perc) && reed_capacity[perc] > 0) { //CRIT_SEC_SIZE
-				for (int i = 0; i < REET_AMOUNT; i++) {
+			if ( ackCount >= size - 1 && onNTopQueue(rank, 1, perc)) { //CRIT_SEC_SIZE
+				for (int i = 0; i < REED_AMOUNT; i++) {
 					for (int j = 0; j < PROC_AMOUNT; j++) {
 						printf("%d ", n_req_ts[i][j]);
 					}
@@ -135,7 +146,8 @@ void mainLoop()
 				free(pkt);
 			case Dead:
 				println("Zakończyłem pracę")
-				return;
+				sleep(5);
+				break;
 			default: 
 			break;
 		}

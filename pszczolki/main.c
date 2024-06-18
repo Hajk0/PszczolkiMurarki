@@ -40,9 +40,9 @@ int req_ts[PROC_AMOUNT] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX,
                             // INT_MAX, INT_MAX, INT_MAX, INT_MAX,
                             // INT_MAX, INT_MAX, INT_MAX, INT_MAX};
 
-int n_req_ts[REET_AMOUNT][PROC_AMOUNT];
+int n_req_ts[REED_AMOUNT][PROC_AMOUNT];
 int flower_req_ts[PROC_AMOUNT];
-int reed_capacity[REET_AMOUNT];
+int reed_capacity[REED_AMOUNT];
 
 void finalizuj()
 {
@@ -86,13 +86,13 @@ void check_thread_support(int provided)
 
 int main(int argc, char **argv)
 {
-    for (int i = 0; i < REET_AMOUNT; i++) {
+    for (int i = 0; i < REED_AMOUNT; i++) {
         for (int j = 0; j < PROC_AMOUNT; j++) {
             n_req_ts[i][j] = INT_MAX;
             if (i == 0)
                 flower_req_ts[j] = INT_MAX;
         }
-        reed_capacity[i] = 5;
+        reed_capacity[i] = 15;
     }
     
     MPI_Status status;

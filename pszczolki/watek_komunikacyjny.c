@@ -79,7 +79,7 @@ void *startKomWatek(void *ptr)
         case APP_PKT:
             debug("Otrzymałem wiadomość od %d", status.MPI_SOURCE);
             reed_capacity[pakiet.data]--;
-            println("Otrzymałem kwiatek od %d", status.MPI_SOURCE);
+            // println("Otrzymałem kwiatek od %d", status.MPI_SOURCE);
             break;
 	    default:
 	        break;
