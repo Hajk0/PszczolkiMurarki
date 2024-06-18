@@ -15,7 +15,7 @@
 #define SEC_IN_STATE 1
 #define STATE_CHANGE_PROB 10
 #define PROC_AMOUNT 8
-#define CRIT_SEC_SIZE 1
+#define CRIT_SEC_SIZE 3
 #define REET_AMOUNT 2
 // #define DEBUG 1
 
@@ -25,16 +25,21 @@
 extern int rank;
 extern int size;
 extern int ackCount;
+extern int flower_ackCount;
 extern pthread_t threadKom;
 
 extern int lamport_clock;
 extern pthread_mutex_t clock_mutex;
 extern pthread_mutex_t check_cond_mutex;
 extern pthread_cond_t check_cond;
+extern pthread_mutex_t check_cond_flower_mutex;
+extern pthread_cond_t check_cond_flower;
 
 extern int timestamps[PROC_AMOUNT];
 extern int req_ts[PROC_AMOUNT];
 extern int n_req_ts[REET_AMOUNT][PROC_AMOUNT];
+extern int flower_req_ts[PROC_AMOUNT];
+extern int reed_capacity[REET_AMOUNT];
 
 /* macro debug - działa jak printf, kiedy zdefiniowano
    DEBUG, kiedy DEBUG niezdefiniowane działa jak instrukcja pusta 

@@ -6,16 +6,24 @@
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 ACK	util.h	17;"	d
 APP_PKT	util.h	20;"	d
+Agony	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
 CRIT_SEC_SIZE	main.h	18;"	d
+Dead	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
 FALSE	main.h	14;"	d
 FINISH	util.h	21;"	d
 FLAGS	Makefile	/^FLAGS=-g$/;"	m
+FLOWER_ACK	util.h	24;"	d
+FLOWER_RELEASE	util.h	23;"	d
+FLOWER_REQUEST	util.h	22;"	d
 HEADERS	Makefile	/^HEADERS=$(SOURCES:.c=.h)$/;"	m
-InFinish	util.h	/^typedef enum {InRun, InMonitor, InWant, InSection, InFinish} state_t;$/;"	e	enum:__anon2
-InMonitor	util.h	/^typedef enum {InRun, InMonitor, InWant, InSection, InFinish} state_t;$/;"	e	enum:__anon2
-InRun	util.h	/^typedef enum {InRun, InMonitor, InWant, InSection, InFinish} state_t;$/;"	e	enum:__anon2
-InSection	util.h	/^typedef enum {InRun, InMonitor, InWant, InSection, InFinish} state_t;$/;"	e	enum:__anon2
-InWant	util.h	/^typedef enum {InRun, InMonitor, InWant, InSection, InFinish} state_t;$/;"	e	enum:__anon2
+InFinish	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
+InMonitor	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
+InRun	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
+InRunFlower	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
+InSectionFlower	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
+InSectionReet	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
+InWantFlower	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
+InWantReet	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	e	enum:__anon2
 MAINH	main.h	2;"	d
 MPI_PAKIET_T	util.c	/^MPI_Datatype MPI_PAKIET_T;$/;"	v
 NITEMS	util.h	13;"	d
@@ -34,34 +42,42 @@ WATEK_KOMUNIKACYJNY_H	watek_komunikacyjny.h	2;"	d
 ackCount	main.c	/^int ackCount = 0;$/;"	v
 changeState	util.c	/^void changeState( state_t newState )$/;"	f
 check_cond	main.c	/^pthread_cond_t check_cond = PTHREAD_COND_INITIALIZER;$/;"	v
+check_cond_flower	main.c	/^pthread_cond_t check_cond_flower = PTHREAD_COND_INITIALIZER;$/;"	v
+check_cond_flower_mutex	main.c	/^pthread_mutex_t check_cond_flower_mutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v
 check_cond_mutex	main.c	/^pthread_mutex_t check_cond_mutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v
 check_thread_support	main.c	/^void check_thread_support(int provided)$/;"	f
 clock_mutex	main.c	/^pthread_mutex_t clock_mutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v
 data	util.h	/^    int data;     \/* przykładowe pole z danymi; można zmienić nazwę na bardziej pasującą *\/$/;"	m	struct:__anon1
-debug	main.h	58;"	d
-debug	main.h	60;"	d
+debug	main.h	63;"	d
+debug	main.h	65;"	d
 finalizuj	main.c	/^void finalizuj()$/;"	f
+flower_ackCount	main.c	/^int flower_ackCount = 0;$/;"	v
+flower_req_ts	main.c	/^int flower_req_ts[PROC_AMOUNT];$/;"	v
 inicjuj_typ_pakietu	util.c	/^void inicjuj_typ_pakietu()$/;"	f
 lamport_clock	main.c	/^int lamport_clock = 0;$/;"	v
 main	main.c	/^int main(int argc, char **argv)$/;"	f
 mainLoop	watek_glowny.c	/^void mainLoop()$/;"	f
 n_req_ts	main.c	/^int n_req_ts[REET_AMOUNT][PROC_AMOUNT];$/;"	v
 name	util.c	/^    const char *name;$/;"	m	struct:tagNames_t	file:
+onFlowerTopQueue	util.c	/^int onFlowerTopQueue(int rank, int topN, int perc) {$/;"	f
 onNTopQueue	util.c	/^int onNTopQueue(int rank, int topN, int perc) {$/;"	f
 onTopQueue	util.c	/^int onTopQueue(int rank, int perc) {$/;"	f
 packet_t	util.h	/^} packet_t;$/;"	t	typeref:struct:__anon1
-println	main.h	64;"	d
+println	main.h	69;"	d
 rank	main.c	/^int rank, size;$/;"	v
+reed_capacity	main.c	/^int reed_capacity[REET_AMOUNT];$/;"	v
 req_ts	main.c	/^int req_ts[PROC_AMOUNT] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX, $/;"	v
 sendPacket	util.c	/^void sendPacket(packet_t *pkt, int destination, int tag)$/;"	f
 sendReleases	util.c	/^void sendReleases(packet_t *pkt) {$/;"	f
+sendReleasesFlower	util.c	/^void sendReleasesFlower(packet_t *pkt) {$/;"	f
 sendRequests	util.c	/^void sendRequests(packet_t *pkt) {$/;"	f
+sendRequestsFlower	util.c	/^void sendRequestsFlower(packet_t *pkt) {$/;"	f
 size	main.c	/^int rank, size;$/;"	v
 src	util.h	/^    int src;  $/;"	m	struct:__anon1
 stan	util.c	/^state_t stan=InRun;$/;"	v
 startKomWatek	watek_komunikacyjny.c	/^void *startKomWatek(void *ptr)$/;"	f
 stateMut	util.c	/^pthread_mutex_t stateMut = PTHREAD_MUTEX_INITIALIZER;$/;"	v
-state_t	util.h	/^typedef enum {InRun, InMonitor, InWant, InSection, InFinish} state_t;$/;"	t	typeref:enum:__anon2
+state_t	util.h	/^typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;$/;"	t	typeref:enum:__anon2
 tag	util.c	/^    int tag;$/;"	m	struct:tagNames_t	file:
 tag2string	util.c	/^const char *const tag2string( int tag )$/;"	f
 tagNames	util.c	/^} tagNames[] = { { "pakiet aplikacyjny", APP_PKT }, { "finish", FINISH}, $/;"	v	typeref:struct:tagNames_t

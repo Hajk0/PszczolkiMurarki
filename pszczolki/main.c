@@ -14,6 +14,7 @@
  */
 int rank, size;
 int ackCount = 0;
+int flower_ackCount = 0;
 int lamport_clock = 0;
 
 /* 
@@ -27,6 +28,8 @@ pthread_t threadKom;
 pthread_mutex_t clock_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t check_cond_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t check_cond = PTHREAD_COND_INITIALIZER;
+pthread_cond_t check_cond_flower = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t check_cond_flower_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int timestamps[PROC_AMOUNT] =   {INT_MAX, INT_MAX, INT_MAX, INT_MAX, 
                                 INT_MAX, INT_MAX, INT_MAX, INT_MAX};
@@ -38,11 +41,17 @@ int req_ts[PROC_AMOUNT] =    {INT_MAX, INT_MAX, INT_MAX, INT_MAX,
                             // INT_MAX, INT_MAX, INT_MAX, INT_MAX};
 
 int n_req_ts[REET_AMOUNT][PROC_AMOUNT];
+int flower_req_ts[PROC_AMOUNT];
+int reed_capacity[REET_AMOUNT];
 
 void finalizuj()
 {
     pthread_cond_destroy(&check_cond);
+    pthread_cond_destroy(&check_cond_flower);
     pthread_mutex_destroy( &stateMut);
+    pthread_mutex_destroy( &clock_mutex);
+    pthread_mutex_destroy( &check_cond_mutex);
+    pthread_mutex_destroy( &check_cond_flower_mutex);
     /* Czekamy, aż wątek potomny się zakończy */
     println("czekam na wątek \"komunikacyjny\"\n" );
     pthread_join(threadKom,NULL);
@@ -80,7 +89,10 @@ int main(int argc, char **argv)
     for (int i = 0; i < REET_AMOUNT; i++) {
         for (int j = 0; j < PROC_AMOUNT; j++) {
             n_req_ts[i][j] = INT_MAX;
+            if (i == 0)
+                flower_req_ts[j] = INT_MAX;
         }
+        reed_capacity[i] = 5;
     }
     
     MPI_Status status;

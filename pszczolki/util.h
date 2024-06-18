@@ -19,6 +19,9 @@ typedef struct {
 #define RELEASE 3
 #define APP_PKT 4
 #define FINISH  5
+#define FLOWER_REQUEST 6
+#define FLOWER_RELEASE 7
+#define FLOWER_ACK 8
 
 extern MPI_Datatype MPI_PAKIET_T;
 void inicjuj_typ_pakietu();
@@ -26,7 +29,7 @@ void inicjuj_typ_pakietu();
 /* wysyłanie pakietu, skrót: wskaźnik do pakietu (0 oznacza stwórz pusty pakiet), do kogo, z jakim typem */
 void sendPacket(packet_t *pkt, int destination, int tag);
 
-typedef enum {InRun, InMonitor, InWant, InSection, InFinish} state_t;
+typedef enum {InRun, InMonitor, InWantReet, InSectionReet, InRunFlower, InWantFlower, InSectionFlower, Agony, InFinish, Dead} state_t;
 extern state_t stan;
 extern pthread_mutex_t stateMut;
 /* zmiana stanu, obwarowana muteksem */
@@ -35,4 +38,7 @@ int onTopQueue(int rank, int perc);
 int onNTopQueue(int rank, int topN, int perc);
 void sendRequests(packet_t *pkt);
 void sendReleases(packet_t *pkt);
+int onFlowerTopQueue(int rank, int topN, int perc);
+void sendRequestsFlower(packet_t *pkt);
+void sendReleasesFlower(packet_t *pkt);
 #endif

@@ -94,6 +94,19 @@ int onNTopQueue(int rank, int topN, int perc) {
     return TRUE;
 }
 
+int onFlowerTopQueue(int rank, int topN, int perc) {
+    int count = 0;
+    for (int i = 0; i < PROC_AMOUNT; i++) {
+        if (i != rank && flower_req_ts[i] <= flower_req_ts[rank]) {
+            count++;
+            if (count == topN) {
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
 void sendRequests(packet_t *pkt) {
     ackCount = 0;
 
@@ -109,6 +122,21 @@ void sendRequests(packet_t *pkt) {
     }
 }
 
+void sendRequestsFlower(packet_t *pkt) {
+    flower_ackCount = 0;
+
+    for (int i=0;i<=size-1;i++) {
+        if (i!=rank) {
+            sendPacket( pkt, i, FLOWER_REQUEST );
+        } else { // send to myself
+            pthread_mutex_lock(&clock_mutex);
+            lamport_clock++;
+            flower_req_ts[rank] = lamport_clock;
+            pthread_mutex_unlock(&clock_mutex);
+        }
+    }
+}
+
 void sendReleases(packet_t *pkt) {
     for (int i=0;i<=size-1;i++) {
         if (i!=rank) {
@@ -117,6 +145,19 @@ void sendReleases(packet_t *pkt) {
             pthread_mutex_lock(&clock_mutex);
             lamport_clock++;
             n_req_ts[pkt->data][rank] = INT_MAX;
+            pthread_mutex_unlock(&clock_mutex);
+        }
+    }
+}
+
+void sendReleasesFlower(packet_t *pkt) {
+    for (int i=0;i<=size-1;i++) {
+        if (i!=rank) {
+            sendPacket( pkt, i, FLOWER_RELEASE);
+        } else { // send to myself
+            pthread_mutex_lock(&clock_mutex);
+            lamport_clock++;
+            flower_req_ts[rank] = INT_MAX;
             pthread_mutex_unlock(&clock_mutex);
         }
     }
